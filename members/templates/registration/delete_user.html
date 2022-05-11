@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Delete
+{% endblock %}
+
+{% block content %}
+
+	{% if user.is_authenticated %}
+		{% if user.id == profile.id %}
+			<hr>
+			<h1>Delete: {{user}}</h1>
+			<hr>
+			<div class="form-group">
+				<form method="POST">
+					{% csrf_token %}
+					<button class="btn btn-secondary">Delete</button>
+				</form>
+			</div>
+		{% endif %}
+	{% endif %}
+
+{% endblock %}

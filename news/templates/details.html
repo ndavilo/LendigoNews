@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+	 {{ post.title }}
+{% endblock %}
+
+{% block content %}
+<div class="shadow-lg p-3 mb-5 bg-body rounded">
+	<br/><br/>
+	<h2><strong>{{ post.title }} </strong><br/></h2>
+	{% if post.urls %}<a href="{{post.urls}}">{{post.urls}}</a>{% endif %} 
+	{% if post.body %}{{ post.body|safe }}{% endif %}
+
+	{% if post.attached_image %} <img src="{{ post.attached_image.url}}" width="600" height="600"> {% endif %}
+
+	<br/><br/>
+	<form action="{% url 'like_post' post.pk %}" method="POST">
+		{% csrf_token %}
+		{% if user.is_authenticated %}
+			{% if liked %}
+				<button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-danger btn-sm">UnLike</button> - 
+
+			{% else %}
+
+				<button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-primary btn-sm">Like</button> - 
+
+			{% endif %}
+		{% else %}
+			<a href="{% url 'login' %}" class="btn btn-danger">login! to like</a>
+
+		{% endif %}
+
+		{{ total_likes }} Likes
+		<br/>
+		{{ post.total_views }} Views
+
+	</form>
+	<br/>
+	{% if user.is_staff %}
+			{% if post.code %}
+
+			{%else%}
+
+				<small><a href="{% url 'update' post.pk %}" class="btn btn-warning"> Edit </a></small> 
+				<small><a href="{% url 'delete' post.pk %}" class="btn btn-warning"> Delete </a></small>
+
+			{% endif %}
+
+	{% endif %}
+
+	<br/><br/>
+
+	{% if not post.comments.all %}
+		{% if user.is_authenticated %}
+			<h2> No Comments . . . </h2><a href="{% url 'add_comment' post.pk %}" class="btn btn-warning"> <img src="https://img.icons8.com/fluency/30/000000/comments.png"/>Add Comment </a>
+		{% endif %}
+
+	{% else %}
+			{% if user.is_authenticated %}
+				<h2> Comments . . . </h2> <a href="{% url 'add_comment' post.pk %}" class="btn btn-warning"> <img src="https://img.icons8.com/fluency/30/000000/comments.png"/>Add Comment </a><br/>
+			{% endif %}
+			{% for comment in post.comments.all %}
+				<br/>
+				<strong>
+					{% if comment.name.profile %} 
+					<a href="{% url 'show_profile_page' comment.name.profile.id %}"><i>@{{ comment.name}}</i></a>
+					{% else %}
+					@{{ comment.name}}
+					{% endif %}
+					{{ comment.date_added }}
+				</strong>
+				<br/>
+				{{ comment.body }}
+				<br/>
+				{% if user.id == comment.name.id %}
+					<a class="btn btn-warning btn-sm mt-1 mb-1" href="{% url 'updateC' comment.pk %}">Update</a>
+          <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'deleteC' comment.pk %}">Delete</a>
+
+				{% endif %}
+			
+			{% endfor %}
+
+	{% endif %}
+
+	<br/>
+	<br/>
+</div>
+{% endblock %}
+
+{% block profile %}
+<center>
+<div class="card text-white bg-secondary mb-3" style="width: auto;">
+  {% if post.author.profile.profile_pic %} 
+	    <img src="{{ post.author.profile.profile_pic.url }}" width="150" height="150">
+	{% endif %}
+  <div class="card-body">
+    <h5 class="card-title"><small> {{ post.author.first_name }} {{ post.author.last_name }}</small></h5>
+    <p class="card-text">
+
+    {% if post.author.profile.bio %} 
+	    	<p class="card-text"><small class="text-muted"> {{ post.author.profile.bio }} </small></p>
+		{% endif %}
+
+    </p>
+  </div>
+  <ul class="list-group list-group-flush">
+  {% if post.author.profile %} 
+	    <a href="{% url 'show_profile_page' post.author.profile.id %}" class="btn btn-secondary">View Profile Page</a>
+	{% endif %}
+	{% if post.author.profile.Phone %} 
+	    <p class="card-text"><small class="text-muted">{{ post.author.profile.Phone }} </small></p>
+	{% endif %}
+  </ul> 
+</div>
+</center>
+{% endblock %}

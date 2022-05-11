@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+	User
+{% endblock %}
+
+{% block content %}
+
+<hr>
+<h1> User Profile </h1>
+<hr>
+
+<br/>
+<div class="card text-dark bg-info mb-3">
+	 <div class="row g-0">
+	   <div class="col-md-4">
+	     {% if page_user.profile_pic %} 
+	      <img src="{{ page_user.profile_pic.url}}" width="150" height="150"> 
+	     {% else %}
+	      <img src="{% static 'blog/image/user-profile-default-image.png' %}" width="150" height="150"> 
+	     {% endif %}
+	   </div>
+	   <div class="col-md-8">
+	     <div class="card-body">
+	       <h5 class="card-title"><small> {{ page_user.user.first_name }} {{ page_user.user.last_name }}</small><br/></h5>
+	       <p class="card-text">{{ page_user.bio }}</p>
+	       <p class="card-text"><small class="text-muted"> {{ page_user.Phone }} </small></p>
+	       <a href="{% url 'message' %}" class="btn btn-light">Inbox</a><a href="{% url 'send_message' %}" class="btn btn-light">Send Message</a>
+	       <br/>{% if user.id == profile.id %}<a href="{% url 'deleteuser' user.id %}" class="btn btn-light">Delete User</a>{% endif %}
+	     </div>
+	   </div>
+	 </div>
+</div>
+<hr>
+<br/>
+
+
+{% endblock %}
