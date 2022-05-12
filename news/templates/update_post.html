@@ -6,7 +6,6 @@
 
 {% block content %}
 
-	{% if user.is_authenticated %}
 		{% if user.id == post.author.id %}
 
 			<hr>
@@ -22,6 +21,5 @@
 			</div>
 
 			{% endif %}
-	{% endif %}
 
 {% endblock %}

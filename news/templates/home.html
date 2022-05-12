@@ -8,13 +8,11 @@
 <div class="shadow-sm p-3 mb-5 bg-body rounded">
 	<center>
  	<h2><strong>{{ post.title }} </strong><br/></h2> - by: {{ post.by }}  - {{ post.date_time }} 
-		{% if user.is_staff %}
 			{% if post.code %}
 			{%else%}
 				<small><a href="{% url 'update' post.pk %}" class="btn btn-warning"> Edit </a></small>
 				<small><a href="{% url 'delete' post.pk %}" class="btn btn-warning"> Delete </a></small>
 			{% endif %}
-		{% endif %}
 	</br><a href="{{post.urls}}" target="_blank" rel="noopener noreferrer">{{post.urls}}</a> {% if post.body %}{{ post.body|slice:":200"|safe }}{% endif %}
 	<form action="{% url 'article_detail' post.pk %}" method="get">
 	 	<input type="hidden" name="post-id" value="{{post.id}}">
